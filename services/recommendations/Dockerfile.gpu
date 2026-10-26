@@ -1,0 +1,15 @@
+ARG CUDA_VERSION=12.4.1
+FROM nvidia/cuda:${CUDA_VERSION}-cudnn-runtime-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends python3.11 python3-pip \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /srv
+COPY requirements-gpu.txt .
+RUN pip3 install --no-cache-dir -r requirements-gpu.txt
+
+COPY recommendations ./recommendations
+ENV MODEL_DEVICE=cuda
+CMD ["python3", "-m", "recommendations.serve"]

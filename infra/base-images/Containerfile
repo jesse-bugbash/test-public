@@ -1,0 +1,6 @@
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.4
+
+RUN microdnf install -y shadow-utils tar gzip && microdnf clean all \
+ && useradd --uid 1001 --gid 0 appuser
+
+USER 1001
